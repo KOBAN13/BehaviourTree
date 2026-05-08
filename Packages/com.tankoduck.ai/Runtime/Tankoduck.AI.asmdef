@@ -1,0 +1,21 @@
+{
+  "name": "Tankoduck.AI",
+  "rootNamespace": "",
+  "references": [
+    "Animancer",
+    "R3.Unity",
+    "UniTask",
+    "UnityEngine.UI",
+    "VContainer",
+    "Kybernetik.Animancer"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

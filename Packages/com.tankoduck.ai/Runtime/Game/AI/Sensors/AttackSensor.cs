@@ -1,0 +1,74 @@
+﻿using System;
+using Game.Infrastructure.Extension;
+using Game.Infrastructure.Helpers;
+using R3;
+using UnityEngine;
+using Vector3 = UnityEngine.Vector3;
+
+namespace GOAP
+{
+    [RequireComponent(typeof(SphereCollider))]
+    [Serializable]
+    public class AttackSensor : MonoBehaviour, ISensor
+    {
+        [SerializeField] private float _radiusDetect;
+        [SerializeField] private SphereCollider _trigger;
+        
+        private GameObject _target;
+        private Vector3 _lastKnownPosition;
+        private readonly CompositeDisposable _compositeDisposable = new();
+        private readonly ReactiveProperty<bool> _isActiveSensor = new();
+        
+        public Vector3 Target => _target ? _target.transform.position : Vector3.zero;
+        public bool IsActivate => _isActiveSensor.Value;
+        public ReadOnlyReactiveProperty<bool> IsActiveSensor => _isActiveSensor;
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.IsOnLayer(LayerMasks.Player))
+            {
+                UpdateActiveSensor(true);
+            }
+        }
+        
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.IsOnLayer(LayerMasks.Player))
+            {
+                UpdateActiveSensor(false);
+            }
+        }
+
+        private void OnDisable()
+        {
+            _compositeDisposable?.Clear();
+            _compositeDisposable?.Dispose();
+        }
+
+        private void Awake()    
+        {
+            _trigger.isTrigger = true;
+            _trigger.radius = _radiusDetect;
+        }
+
+        private void UpdateActiveSensor(bool value)
+        {
+            _isActiveSensor.Value = value;
+        }
+
+        private void UpdateTargetPosition(GameObject target = null)
+        {
+            _target = target;
+            _isActiveSensor.Value = Target != Vector3.zero;
+
+            if (!_isActiveSensor.Value || (_lastKnownPosition != Target && _lastKnownPosition != Vector3.zero)) return;
+            _lastKnownPosition = Target;
+        }
+        
+        private void OnDrawGizmos() 
+        {
+            Gizmos.color = IsActivate ? Color.red : Color.green;
+            Gizmos.DrawWireSphere(transform.position, _radiusDetect);
+        }
+    }
+}

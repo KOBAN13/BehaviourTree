@@ -1,0 +1,10 @@
+{
+  "name": "com.tankoduck.ai",
+  "version": "0.1.0",
+  "displayName": "Tankoduck AI",
+  "description": "Runtime AI agent, blackboard, sensors, behavior tree, and supporting enemy logic for Tankoduck.",
+  "unity": "6000.4",
+  "dependencies": {
+    "com.unity.ugui": "2.0.0"
+  }
+}
